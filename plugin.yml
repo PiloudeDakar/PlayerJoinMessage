@@ -1,0 +1,5 @@
+name: PlayerJoinMessage
+author: PiloudeDakar
+version: 1.0
+api: 3.0.0
+main: PiloudeDakar\PlayerJoinMessage\Main
