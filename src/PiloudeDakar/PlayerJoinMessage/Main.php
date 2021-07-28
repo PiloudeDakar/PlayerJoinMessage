@@ -10,6 +10,10 @@ use pocketmine\utils\Config;
 
 class Main extends PluginBase implements Listener{
 
+    private mixed $config;
+    private string $joinMessage;
+    private string $leaveMessage;
+    
     public function onEnable()
     {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
@@ -19,23 +23,26 @@ class Main extends PluginBase implements Listener{
 joinMessage: 
 leaveMessage:');
         }
+        $this->config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+        $this->joinMessage = $this->config->get("joinMessage");
+        $this->leaveMessage = $this->config->get("leaveMessage");
+
     }
 
     public function onPlayerJoin(PlayerJoinEvent $event)
     {
-        $config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
+
         $player = $event->getPlayer()->getName();
-        if (!$config->get("joinMessage") === null) {
-            $event->setJoinMessage(stristr($config->get("joinMessage"), '$player', true) . $player . substr(stristr($config->get("joinMessage"), '$player'), 7));
+        if (!$this->joinMessage === null) {
+            $event->setJoinMessage(stristr($this->joinMessage, '$player', true) . $player . substr(stristr($this->joinMessage, '$player'), 7));
         }
     }
 
     public function onPlayerQuit(PlayerQuitEvent $event)
     {
-        $config = new Config($this->getDataFolder() . "config.yml", Config::YAML);
         $player = $event->getPlayer()->getName();
-        if (!$config->get("leaveMessage") === null) {
-            $event->setQuitMessage(stristr($config->get("leaveMessage"), '$player', true) . $player . substr(stristr($config->get("leaveMessage"), '$player'), 7));
+        if (!$this->leaveMessage === null) {
+            $event->setQuitMessage(stristr($this->leaveMessage, '$player', true) . $player . substr(stristr($this->leaveMessage, '$player'), 7));
         }
     }
 }
